@@ -1,0 +1,61 @@
+@startuml usecase2
+mainframe uc undo_transfer
+
+:Alice: as al <<EOA>>
+:OracleA: as oc <<Oracle>>
+
+package TokenX as tx <<SC>> {
+    usecase "transfer" as tfx
+}
+
+package AMM as am <<SC>> {
+    usecase "undo_transfer" as udt
+    usecase "identifyTransaction" as it <<internal>>
+}
+package VerifyTransaction as vt <<SC>> {
+    usecase "verify" as vf
+    usecase "submitBlock" as sb
+    usecase "submitAndVerifyBlock" as sbv
+    usecase "submitTx" as st
+    usecase "submitTxMetaData" as stm
+    usecase "getTxMetaData" as gtm
+}
+
+package Ethrelay as er <<SC>> {
+    usecase "verifyTransaction" as evt
+    usecase "submitBlock" as esb
+    usecase "disputeBlockHeader" as dbh
+}
+
+package Ethash as eh <<SC>> {
+    usecase "verifyPoW" as vp
+}
+
+note "omit some trivial steps" as n1
+note "omit some trivial steps" as n2
+
+al --> tfx : 1 (tx1).
+tfx --> am : 1
+
+oc --> n1
+n1 --> sb : 2.a-submit the\n block of tx1 and its\n 6 descendents
+sb --> esb : 2.a
+oc --> n2
+n2 --> sbv : 2.b-submit and verify the\n block of tx1 and its\n 6 descendents
+sbv --> esb : 2.b
+sbv <--> dbh : 2.b
+dbh <--> vp : 2.b
+oc --> st : 2-submit tx1
+oc --> stm : 2-submit tx1's meta data
+
+
+al --> udt : 3
+udt <--> it : 3-validate
+it <--> vf : 3
+it <--> gtm : 3
+udt --> tfx : 3-if valid
+tfx --> al : 3
+vf <--> evt : 3
+
+
+@enduml

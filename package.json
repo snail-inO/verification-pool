@@ -1,0 +1,33 @@
+{
+  "name": "ethrelay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pantos-io/ethrelay.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "ethereumjs-util": "^7.1.4",
+    "rlp": "^3.0.0",
+    "solidity-rlp": "^2.0.1",
+    "web3": "1.7.3"
+  },
+  "bugs": {
+    "url": "https://github.com/pantos-io/ethrelay/issues"
+  },
+  "homepage": "https://github.com/pantos-io/ethrelay#readme",
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.15",
+    "chai": "^4.2.0"
+  }
+}

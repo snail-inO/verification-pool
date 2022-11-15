@@ -1,0 +1,85 @@
+@startuml component1
+mainframe component
+
+component VerifyTransaction {
+    [Ethash] as ethash
+    [Ethrelay] as relay
+    [VerifyTransaction] as vt
+
+    interface "verifyPoW" as vpow
+
+    interface "depositStake" as ds
+    interface "submitBlock" as sb0
+    interface "disputeBlockHeader" as db
+
+    interface "verifyTransaction" as vtx
+    interface "isHeaderStored" as ihs
+    interface "getRequiredVerificationFee" as grvf0
+    interface "getRequiredStakePerBlock" as grsb0
+
+    portin "submitBlock" as sb1
+    portin "submitTx" as st
+    portin "submitTxMetaData" as stm
+    
+    portout "getRequiredVerificationFee" as grvf1
+    portout "getRequiredStakePerBlock" as grsb1
+    portout "getTxMetaData" as gtm
+    portout "verify" as vf
+}
+
+
+[Token] as tk
+[AMM] as amm
+
+interface "transfer" as tf
+
+interface "swapXY" as sxy
+interface "undo_transfer" as udt
+
+gtm ---[hidden]--- grsb1
+grsb1 ---[hidden]---- grvf1
+grvf1 -[hidden]- vf
+
+ethash --() vpow
+
+vpow )-- relay
+
+relay --() vtx
+relay --() ihs
+relay --() grvf0
+relay --() grsb0
+
+relay --() ds
+relay --() sb0
+relay --() db
+
+vtx )-- vt
+ihs )-- vt
+grvf0 )-- vt
+grsb0 )-- vt
+
+ds )-- vt
+sb0 )-- vt
+db )-- vt
+
+sb1 --> vt
+st --> vt
+stm --> vt
+
+vt --> grvf1
+vt --> grsb1
+vt --> gtm
+vt --> vf
+
+vf )-- amm
+grvf1 )-- amm
+gtm )-- amm
+
+tk --() tf
+
+tf )-- amm
+
+amm --() sxy
+amm --() udt
+
+@enduml
